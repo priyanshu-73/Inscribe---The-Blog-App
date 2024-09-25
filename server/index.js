@@ -22,3 +22,10 @@ app.use("/api/auth", authRouter);
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
 });
+
+// Error Handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  res.status(statusCode).json({ success: false, statusCode, message });
+});
