@@ -3,38 +3,40 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  console.log(formData);
+  const { loading } = useSelector((state) => state.user);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      toast.error("All Fields are required!");
-      return;
+      dispatch(signInFailure("All Fields are required"));
     }
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const res = await axios.post("/api/auth/signin", formData, {
         headers: { "Content-Type": "application/json" },
       });
       const data = res.data;
       if (data.success === false) {
-        toast.error(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
-      toast.success("Signed in Successfully!");
-      setLoading(false);
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      console.log(error);
-      setLoading(false);
-      toast.error(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
