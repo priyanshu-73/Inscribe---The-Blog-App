@@ -9,6 +9,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const SignIn = () => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       dispatch(signInFailure("All Fields are required"));
+      return;
     }
     try {
       dispatch(signInStart());
@@ -35,8 +37,10 @@ const SignIn = () => {
       }
       dispatch(signInSuccess(data));
       navigate("/");
+      toast.success("Signed in successfully");
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.message(error.message);
     }
   };
   return (
@@ -89,10 +93,11 @@ const SignIn = () => {
                 "Sign in"
               )}
             </Button>
+            <OAuth />
             <div className="flex gap-1 text-lg">
               <span>Don't have an account?</span>
               <Link
-                to={"/sign-in"}
+                to={"/sign-up"}
                 className="font-semibold text-blue-500 hover:text-blue-400"
               >
                 Sign Up

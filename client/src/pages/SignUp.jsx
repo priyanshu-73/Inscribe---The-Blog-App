@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ const SignUp = () => {
                 "Sign up"
               )}
             </Button>
+            <OAuth />
             <div className="flex gap-1 text-lg">
               <span>Have an account?</span>
               <Link
